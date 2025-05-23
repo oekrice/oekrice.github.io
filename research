@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>Oliver Rice</title>
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="website keywords, website keywords" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+  <link rel="shortcut icon" type="image/png" href="favicon.png" />
+
+</head>
+
+<body>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_colour", allows you to change the colour of the text -->
+          <h1><a href="stfc2021.htm"><span style="color:white">Oliver Rice</span></a></h1>
+          <h2><span style="color:white">PhD Student, Durham University</span></h2>
+
+        </div>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+          <li class="selected"><a href="stfc2021">Home</a></li>
+        </ul>
+      </div>
+    </div>
+    <div id="content_header"></div>
+    <div id="site_content">
+      <div id="content">
+        <!-- insert the page content here -->
+        <p> I'm a second-year PhD student studying at Durham University under <a href ="https://www.maths.dur.ac.uk/users/anthony.yeates">Prof. Anthony Yeates</a>. My main research is in magnetohyrdodynamic/magnetofrictional modelling of the Sun's magnetic field. In particular, I will be focusing on the behaviour of flux ropes, and attempting to predict whether or not they will erupt.  </p>
+
+        <img src = "highres.png" alt = "Coronal Model" width="400" height = "400" class="center" >
+
+        <p> In an attempt to improve the initial conditions of some of our simulations, we have developed a new method to model the global Solar Corona (see the above picture). The paper describing this has recently been accepted into the Astrophysical Journal, and is available for your perusal <a href ="https://arxiv.org/abs/2110.01319">here</a>. </p>
+
+         <p> I'm currently using 2.5D magnetofrictional simulations to unertake an extensive (many thousands of runs) parameter study in an attempt to find correlations between the probability of an eruption and various diagnostics. The preliminary results are interesting, and will hopefully be published in due course...</p>
+      </div>
+    </div>
+    <div id="content_footer"></div>
+    <div id="footer">
+      Based on an HTML template from <a href="http://www.html5webtemplates.co.uk">http://www.html5webtemplates.co.uk</a>
+    </div>
+  </div>
+</body>
+</html>

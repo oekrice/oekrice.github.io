@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>Oliver Rice</title>
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="Oliver Rice, Durham, Solar, Solar Wind, Corona, PhD, Oliver, Rice" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+  <link rel="shortcut icon" type="image/png" href="favicon.png" />
+
+</head>
+
+<body>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_colour", allows you to change the colour of the text -->
+          <h1><a href=""><span style="color:white">Oliver Rice</span></a></h1>
+          <h2><span style="color:white">Postdoctoral Researcher, Durham University</span></h2>
+
+        </div>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+          <li class="selected"><a href="">Home</a></li>
+          <li><a href="pubs.html">Publications and Awards</a></li>
+          <li><a href="talks.html">Talks and Posters</a></li>
+          <li><a href="otherstuff.html">Other Things</a></li>
+        </ul>
+      </div>
+    </div>
+    <div id="content_header"></div>
+    <div id="site_content">
+      <div id="content" >
+        <!-- insert the page content here -->
+
+        <img src = "me.jpg" alt = "Picture of Me" width="150" height = "150" class="left">
+
+        <p align="justify"> I'm a postdoctoral research associate at Durham University, working with <a href ="https://www.maths.dur.ac.uk/users/christopher.prior"> Dr. Chris Prior</a> on solar coronal magnetic field modelling. I completed my PhD in 2024 under <a href ="https://www.maths.dur.ac.uk/users/anthony.yeates">Prof. Anthony Yeates</a>. My main research is in magnetohydrodynamic and magnetofrictional modelling of the Sun's magnetic field. In particular, I focus on the potential prediction of magnetic flux ropes in the solar corona. I have used existing code (LARE2D) and my own Fortran 90 models to run very large parameter studies of magnetic field behviour, along with a new semi-analytic model for steady-state coronal magnetic fields. Ultimately, my hope is that  this research can be used to improve space weather predictions by providing better estimates for when magnetic flux ropes become unstable and erupt. I have recently been focusing on new methods to extrapolate a quasi-static magnetic field from observations of active regions, with the aim of studying the effects of including (or not) the chromosphere in these models.</p>
+
+        <p align="justify"> <strong> As of April 2025 I have finished working at Durham and have no way to update this page -- so things will be out of date on this website as I can't access it! </strong> </p>
+
+
+        <h1>Research Summary</h1>
+
+
+        <p> <strong> Outflow fields </strong></p>
+        <p align="justify"> In an attempt to improve the initial conditions of some of our simulations, we have developed a new method to model the global Solar Corona (see the below picture). The paper has been published in the Astrophysical Journal, and is available <a href ="https://ui.adsabs.harvard.edu/abs/2021ApJ...923...57R/abstract">here</a>. These new 'outflow fields' have numerous advantages over the traditional alternative (PFSS), namely that the upper corona is no longer current-free but is stretched outwards by the effect of the solar wind. These fields are now being used as the default initial condition for the DumFric global magnetofrictional code.</p>
+
+        <img src = "highres.png" alt = "Coronal Model" width="300" height = "300" class="center">
+
+        <p> <strong> Flux Rope Behaviour Predictions </strong></p>
+
+        <p align="justify"> We have used 2.5D simulations to undertake an extensive (several thousand simulations) parameter study in an attempt to find correlations between the probability of an eruption and various scalar diagnostics. We have discovered several indicators of eruptivity that are consistent across the entire parameter space - the best of which predicted eruptions with greater than 90% accuracy. The previously proposed 'eruptivty index' was not found to be remarkably good, but we have proposed a variation on this that performs very well in both magnetofriction (MF) and magnetohydrodynamic (MHD) simulations. We have also observed consistency between the instabilities in both MF and MHD, providing credence to the use of magnetofriction for modelling such eruptions. <a href ="https://youtu.be/jLI2OZf9Lws">Here</a> is a video of one our MHD simulations (including an eruption).</p>
+
+        <p align="justify"> This research has been published in two parts.  The first, published in the Frontiers journal, can be found <a href ="https://ui.adsabs.harvard.edu/abs/2022FrASS...9.9135R/abstract">here</a>. The second paper is a considerable improvement upon this, as it includes MHD simulations and the new eruptivity index definition. This was published in the Astrophysical Journal, and is available <a href ="https://ui.adsabs.harvard.edu/abs/2023ApJ...955..114R/abstract">here</a>. This research has won the UKSP (UK Solar Physics) <a href ="https://www.uksolphys.org/general-news/uksp-poster-prizes-at-nam2022-winners/">poster prize</a> in 2022, and the <a href ="https://www.uksolphys.org/general-news/uksp-prize-winners-at-nam-2023/">UKSP special prize</a> in 2023. I was invited to write an article in <strong>Astronomy and Geophysics</strong> as a result, which can (with a bit of faff) be found <a href ="https://academic.oup.com/astrogeo/article/64/2/2.22/7077787">here</a>.</p>
+
+        <p> <strong> A New Magnetofrictional Code </strong></p>
+
+        <img src = "mf_icos.png" alt = "Icosahedral Code" width="600" height = "325" class="center">
+
+        <p align="justify"> For the last year or so I have been focusing on writing an entirely new magnetofrictional code. This will model the entire corona, and unlike previous codes will employ an icosahedral grid - with trianglular rather than rectangular grid cells. This is intended to avoid problems around the poles which currently result in unrealistic relaxation rates. The hope is that this code can be used to verfiy the results of our 2.5D studies, and be used to determine how the scalar quantities could be measured in reality. <a href ="https://youtu.be/wf2NVsLxM60">Here</a> is a brief video of some uninteresting results.</p>
+
+        <p> <strong> Active Region Modelling with Automated Boundary Driving </strong></p>
+
+        <img src = "whitelight_sharp.png" alt = "SHARP extrapolation" width="600" height = "325" class="center">
+
+        <p align="justify"> In my recent postdoc I have been focusing on the effects of including a dense boundary layer representing the chromosphere in coronal magnetic field models. We have found that in general the presence of such a layer delays the eruption of magnetic flux ropes, irrespectively of if they are formed using pure boundary driving or by flux emergence. One of the most interesting things to come out of this research is a new method to model active regions using magnetofriction, using an automated boundary driving routine which precisely matches the in-plane helicity and the radial magnetic field (shown in the image above for Active Region 11318).</p>
+
+        <p> <strong> Future Work </strong></p>
+
+        <p align="justify"> The results of our parameter study have not yet been shown to be valid in full 3D. To acheive this, we will need to perform a large parameter study in 3D, which is computationally expensive but hopefully doable, especially using magnetofriction. 3D analogues of the proposed eruptivity index can then be determined, most probably using the <a href="https://ui.adsabs.harvard.edu/abs/2018JPlPh..84f7702Y/abstract">field-line helicity</a> to some extent. It then remains to determine how these quantities need to be adjusted for the real corona, and the difficulties of extrapolating magnetic field structures from available observations. At which point it should be possible to make some predictions!</p>
+
+
+      </div>
+
+
+    </div>
+    <div id="content_footer"></div>
+    <div id="footer">
+      Based on an HTML template from <a href="http://www.html5webtemplates.co.uk">http://www.html5webtemplates.co.uk</a>
+    </div>
+  </div>
+</body>
+</html>

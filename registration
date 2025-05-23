@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>STFC Introductory Course in Solar and Solar-Terrestrial Physics</title>
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="website keywords, website keywords" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+<link rel="shortcut icon" type="image/png" href="favicon.png" />
+
+</head>
+
+<body>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_colour", allows you to change the colour of the text -->
+          <h1><a href="stfc2021.htm"><span style="color:white">STFC Introductory Course in Solar and Solar-Terrestrial Physics 2021</span></a></h1>
+          <h2><span style="color:white">Durham University</span></h2>
+        </div>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+          <li><a href="stfc2021">Home</a></li>
+          <li><a href="programme">Preliminary Programme</a></li>
+          <li><a href="durham">Location</a></li>
+
+          <li><a href="contactus">Contact Us</a></li>
+
+        </ul>
+      </div>
+    </div>
+    <div id="content_header"></div>
+    <div id="site_content">
+      
+      <div id="content">
+        <!-- insert the page content here -->
+        <h1>Registration for the 2021 STFC Summer School</h1>
+        
+        <p> Application to attend the summer school is open to anyone but is aimed in particular at PhD students starting their degrees in Autumn 2021. Please note that places will be limited, and as such an application does not guarantee you a place on the course. In the event the course is oversubscribed, places will be allocated on a first-come, first-served basis. </p>
+        
+        <h1> Finances </h1>
+        
+        <p> The <strong> cost to non-STFC funded PhD students is £500. </strong> This includes accommodation and food in one of Durham's colleges. Students starting PhDs <strong>funded by the STFC can attend the course free of charge.</strong> </p> 
+        
+        <p> In the unlikely event that we are unable to run the course in person, it will be held online using Zoom and there will be no charge to any attendees. </p>
+        
+        <h1> Apply </h1> 
+        
+        <p>To apply for a place on the course please fill out the <a href ="https://forms.office.com/r/H0amz2dqaR">application form</a>. Shortly afterwards, you should receive an email confirming the details you have submitted and we will be in touch with further information in due course. </p>
+        
+        
+    </div>
+    <div id="content_footer"></div>
+    <div id="footer">
+      Based on an HTML template from <a href="http://www.html5webtemplates.co.uk">http://www.html5webtemplates.co.uk</a>
+    </div>
+  </div>
+</body>
+</html>

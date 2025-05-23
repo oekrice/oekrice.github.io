@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>STFC Introductory Course in Solar and Solar-Terrestrial Physics</title>
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="website keywords, website keywords" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+  <link rel="shortcut icon" type="image/png" href="favicon.png" />
+
+</head>
+
+<body>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_colour", allows you to change the colour of the text -->
+          <h1><a href="stfc2021.htm"><span style="color:white">STFC Introductory Course in Solar and Solar-Terrestrial Physics 2021</span></a></h1>
+          <h2><span style="color:white">Durham University</span></h2>
+        </div>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+          <li><a href="stfc2021">Home</a></li>
+          <li><a href="programme">Programme</a></li>
+          <li class="selected"><a href="durham">Location</a></li>
+            <li> <a href="conduct">Code of Conduct</a></li>
+
+          <li ><a href="contactus">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div id="content_header"></div>
+    <div id="site_content">
+      
+      <div id="content">
+        <!-- insert the page content here -->
+        <h1>Durham </h1>
+        
+        <p> The Summer School 2021 will be hosted at Durham University, in the North of England. Durham is a small, picturesque city famous for its cathedral and castle. Lectures will be held on the University's Science Site, and accommodation will be in Hatfield College. The city is easily accessible by train (on the East Coast Main Line) or by car via the A1. </p> 
+        
+        <p> There are no lectures or events planned for Wednesday afternoon, allowing for plenty of time to explore the city. </p>
+                
+        <h3> Location Map </h3>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2301.2885954426692!2d-1.5767029838421274!3d54.77489378030319!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487e8761f4b33e71%3A0x3d330810c6b2020b!2sHatfield%20College%20%E2%80%A2%20Durham%20University!5e0!3m2!1sen!2suk!4v1627903923757!5m2!1sen!2suk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+    <div id="content_footer"></div>
+    <div id="footer">
+      Based on an HTML template from <a href="http://www.html5webtemplates.co.uk">http://www.html5webtemplates.co.uk</a>
+    </div>
+  </div>
+</body>
+</html>

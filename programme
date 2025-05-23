@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>STFC Introductory Course in Solar and Solar-Terrestrial Physics</title>
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="website keywords, website keywords" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+<link rel="shortcut icon" type="image/png" href="favicon.png" />
+
+</head>
+
+<body>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_colour", allows you to change the colour of the text -->
+          <h1><a href="stfc2021.htm"><span style="color:white">STFC Introductory Course in Solar and Solar-Terrestrial Physics 2021</span></a></h1>
+          <h2><span style="color:white">Durham University</span></h2>
+        </div>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+          <li><a href="stfc2021">Home</a></li>
+          <li class="selected"><a href="programme">Programme</a></li>
+          <li ><a href="durham">Location</a></li>
+        <li> <a href="conduct">Code of Conduct</a></li>
+
+        <li><a href="contactus">Contact Us</a></li>
+
+        </ul>
+      </div>
+    </div>
+    <div id="content_header"></div>
+    <div id="site_content">
+      
+      <div id="content">
+        <!-- insert the page content here -->
+        <h1>Course Programme</h1>
+        
+        <p>Acommodation and hot meals during the week will be in Hatfield College. Lectures will be held in Lecture Theatre E005, in the Engineering Department.</p>
+        
+        <p> <strong> Sunday 22nd August </strong> </p>
+        <p> 14:00 - 18:00 &nbsp;&nbsp;&nbsp;&nbsp; Arrival and Registration (Hatfield College) <br>
+         18:00 - ... &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Icebreaker Reception </p>
+        
+        <p> <strong> Monday 23rd August </strong> </p>
+        <p> 09:00 - 10:30 &nbsp;&nbsp;&nbsp;&nbsp; Introduction to Plasma Physics (C1) - Prof. Philippa Browning 
+        <br> 11:00 - 12:30 &nbsp;&nbsp;&nbsp;&nbsp; MHD: Introduction (C2) - Prof. Anthony Yeates
+        <br> 12:30 - 14:00  &nbsp;&nbsp;&nbsp;&nbsp; Lunch
+        <br> 14:00 - 15:30 &nbsp;&nbsp;&nbsp;&nbsp; Solar Interior and Helioseismology (C3) - Dr. Rekha Jain 
+        <br> 16:00 - 17:00 &nbsp;&nbsp;&nbsp;&nbsp; Surviving the PhD (S1) - Dr. Pete Whitton 
+        <br> 17:00 - 17:30 &nbsp;&nbsp;&nbsp;&nbsp; PhD Mental Health
+        <br> 17:30 - 18:30 &nbsp;&nbsp;&nbsp;&nbsp; Careers Q&A 
+        <br> 19:00 - 20:00 &nbsp;&nbsp;&nbsp;&nbsp; Dinner (Hatfield College) </p>
+
+        <p> <strong> Tuesday 24th August </strong> </p>
+        <p> 09:00 - 10:30 &nbsp;&nbsp;&nbsp;&nbsp; MHD: Waves and instabilities (C4) - Dr. Richard Morton  
+        <br> 11:00 - 12:30 &nbsp;&nbsp;&nbsp;&nbsp; Magnetic Reconnection (C5) - Dr. Peter Wyper
+        <br> 12:30 - 14:00  &nbsp;&nbsp;&nbsp;&nbsp; Lunch
+        <br> 14:00 - 15:30 &nbsp;&nbsp;&nbsp;&nbsp; Tools of Magnetic Topology (S2) - Dr. Chris Prior
+        <br> 16:00 - 17:30 &nbsp;&nbsp;&nbsp;&nbsp; Public Engagement is Good for You (S3) - Dr. Pete Edwards  
+        <br> 18:30 - 20:00 &nbsp;&nbsp;&nbsp;&nbsp; Dinner (Hatfield College) </p>
+        
+        <p> <strong> Wednesday 25th August </strong> </p>
+        <p> 09:00 - 10:30 &nbsp;&nbsp;&nbsp;&nbsp; Introduction to the Solar Atmosphere (C6) - Dr. Natasha Jeffrey 
+        <br> 11:00 - 12:30 &nbsp;&nbsp;&nbsp;&nbsp; CMEs, the Solar Wind and the Heliosphere (C7) - Dr. Stephanie Yardley 
+        <br> 12:30 - 14:00  &nbsp;&nbsp;&nbsp;&nbsp; Lunch
+        <br> 14:00 - 17:00 &nbsp;&nbsp;&nbsp;&nbsp; Free Afternoon 
+        <br> 18:30 - 20:00 &nbsp;&nbsp;&nbsp;&nbsp; Dinner (Hatfield College) </p>
+
+        <p> <strong> Thursday 26th August </strong> </p>
+        <p> 09:00 - 10:30 &nbsp;&nbsp;&nbsp;&nbsp; Magnetosphere (C8) - Prof. Christopher Owen  
+        <br> 11:00 - 12:30 &nbsp;&nbsp;&nbsp;&nbsp; Ionosphere (C9) - Prof. Marina Galand 
+        <br> 12:30 - 14:00  &nbsp;&nbsp;&nbsp;&nbsp; Lunch
+        <br> 14:00 - 15:30 &nbsp;&nbsp;&nbsp;&nbsp; Mesosphere and Thermosphere (C10) - Dr. Edmund Henley  
+        <br> 16:00 - 17:30 &nbsp;&nbsp;&nbsp;&nbsp; Solar Variability and Climate (C11) - Prof. Matthew Owens 
+        <br> 18:30 - ...  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Conference Dinner </p>
+        
+        <p> <strong> Friday 27th August </strong> </p>
+        <p> 09:00 - 10:30 &nbsp;&nbsp;&nbsp;&nbsp; Planetary Plasma Environments (C12) - Prof. Nick Achilleos 
+        <br> 11:00 - 13:00 &nbsp;&nbsp;&nbsp;&nbsp; Introduction to Python, SunPy and HelioPy (S4) - Dr. Stuart Mumford 
+        <br> 13:00 - 14:00  &nbsp;&nbsp;&nbsp;&nbsp; Lunch
+        <br> 14:00 - ... &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Close </p>
+        
+    </div>
+    <div id="content_footer"></div>
+    <div id="footer">
+      Based on an HTML template from <a href="http://www.html5webtemplates.co.uk">http://www.html5webtemplates.co.uk</a>
+    </div>
+  </div>
+</body>
+</html>

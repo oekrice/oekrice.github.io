@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>STFC Introductory Course in Solar and Solar-Terrestrial Physics</title>
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="website keywords, website keywords" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+<link rel="shortcut icon" type="image/png" href="favicon.png" />
+
+</head>
+
+<body>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_colour", allows you to change the colour of the text -->
+          <h1><a href="stfc2021.htm"><span style="color:white">STFC Introductory Course in Solar and Solar-Terrestrial Physics 2021</span></a></h1>
+          <h2><span style="color:white">Durham University</span></h2>
+        </div>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+          <li><a href="stfc2021">Home</a></li>
+          <li ><a href="programme">Programme</a></li>
+          <li ><a href="durham">Location</a></li>
+          <li class="selected"> <a href="conduct">Code of Conduct</a></li>
+        <li><a href="contactus">Contact Us</a></li>
+
+        </ul>
+      </div>
+    </div>
+    <div id="content_header"></div>
+    <div id="site_content">
+      
+      <div id="content">
+        <!-- insert the page content here -->
+        <h1>Code of Conduct</h1>
+        
+        <p> <strong> The organisers are committed to making this Summer School productive and enjoyable for everyone, regardless of gender, sexual orientation, disability, physical appearance, body size, race, nationality or religion. We will not tolerate harassment of participants in any form. </strong> </p>
+
+        <strong> <p> Please follow these guidelines: </strong> </p>
+
+        <ul>
+        <li> Behave professionally. Harassment and sexist, racist, or exclusionary comments or jokes are not appropriate. Harassment includes sustained disruption of talks or other events, inappropriate physical contact, sexual attention or innuendo, deliberate intimidation, stalking, and photography or recording of an individual without consent. It also includes offensive comments related to gender, sexual orientation, disability, physical appearance, body size, race or religion. </li>
+
+        <li> All communication should be appropriate for a professional audience including people of many different backgrounds. Sexual language and imagery is not appropriate. </li>
+
+        <li>Be kind to others. Do not insult or put down other attendees. Critique ideas, not people. </li>
+
+        <li> If participants wish to share photos or contents of talks/slides of any attendee or speaker on social media, we ask that they first get permission. </li>
+
+        <li> Participants asked to stop any inappropriate behaviour are expected to comply immediately. Attendees violating these rules will be asked to leave the event at the sole discretion of the organisers. </li>
+
+        </ul>
+        Any participant who wishes to report a violation of this policy is asked to speak, in confidence, to Anthony Yeates (anthony.yeates@durham.ac.uk).
+
+        This code of conduct was originally designed for an astronomy conference in London, adapted by Andrew Pontzen and Hiranya Peiris from a document by Software Carpentry, which itself derives from original Creative Commons documents by PyCon and Geek Feminism.
+
+    </div>
+    <div id="content_footer"></div>
+    <div id="footer">
+      Based on an HTML template from <a href="http://www.html5webtemplates.co.uk">http://www.html5webtemplates.co.uk</a>
+    </div>
+  </div>
+</body>
+</html>
