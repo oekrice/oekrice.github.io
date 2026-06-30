@@ -8,12 +8,16 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    height:100vh;
+    height:100%;
+    overflow: hidden;
 }
 
 canvas{
-    background:skyblue;
+    background:#ADD8E6;
     border:1px solid black;
+    display: block;
+    width: min(100vw, 100vh);
+    height: min(100vw, 100vh); 
 }
 </style>
 
@@ -21,7 +25,7 @@ canvas{
 
 <body>
 
-<canvas id="canvas" width="400" height="400"></canvas>
+<canvas id="canvas" width="384" height="384"></canvas>
 
 <script type="module">
 
@@ -29,8 +33,26 @@ canvas{
 // Make a simple loading screen. It's mainly numpy that's taking a while it seems
 //------------------------------------------------------------
 
+//------------------------------------------------------------
+// Stop it scrolling om mobile devices
+//------------------------------------------------------------
+
+document.body.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+}, { passive: false });
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+
+function resize() {
+    const size = Math.min(window.innerWidth, window.innerHeight)
+    canvas.width = size;
+    canvas.height = size;
+}
+
+window.addEventListener("resize", resize);
+resize();
+
 ctx.fillStyle="lightblue";
 ctx.fillRect(0,0,400,400);
 ctx.fillStyle = "black";
@@ -136,6 +158,13 @@ canvas.addEventListener("mouseup",()=>{
     inputs.set("up", false);
 });
 
+canvas.addEventListener("touchstart",()=>{
+    inputs.set("up", true);
+});
+
+canvas.addEventListener("touchend",()=>{
+    inputs.set("up", false);
+});
 //------------------------------------------------------------
 // Timing
 //------------------------------------------------------------
@@ -178,24 +207,25 @@ function loop(now){
     //--------------------------------------------------------
     // Draw
     //--------------------------------------------------------
+    ctx.textAlign = "center";
 
-    ctx.clearRect(0,0,400,400);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
     // sky
     ctx.fillStyle="lightblue";
-    ctx.fillRect(0,0,400,400);
+    ctx.fillRect(0,0,canvas.width,canvas.height);
 
     // ground
     ctx.fillStyle="green";
-    ctx.fillRect(0,360,400,40);
+    ctx.fillRect(0,0.9*canvas.height,canvas.width,0.1*canvas.height);
 
     // ball
 
-    const px = 200 + x * 80;
-    const py = 360 - y * 80;
+    const px = 0.5*canvas.width + x * 0.2*canvas.width;
+    const py = 0.9*canvas.height - y * 0.2*canvas.height;
 
     ctx.beginPath();
-    ctx.arc(px,py,20,0,2*Math.PI);
+    ctx.arc(px,py,0.05*canvas.width,0,2*Math.PI);
     ctx.fillStyle="red";
     ctx.fill();
 
