@@ -1,0 +1,213 @@
+<meta charset="utf-8">
+<title>Pyodide Physics Demo</title>
+
+<style>
+body{
+    margin:0;
+    background:#222;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+canvas{
+    background:skyblue;
+    border:1px solid black;
+}
+</style>
+
+</head>
+
+<body>
+
+<canvas id="canvas" width="400" height="400"></canvas>
+
+<script type="module">
+
+//------------------------------------------------------------
+// Make a simple loading screen. It's mainly numpy that's taking a while it seems
+//------------------------------------------------------------
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+ctx.fillStyle="lightblue";
+ctx.fillRect(0,0,400,400);
+ctx.fillStyle = "black";
+ctx.font = "24px Calibri";
+ctx.textAlign = "center";
+ctx.fillText("Loading things. Be patient...", canvas.width / 2, canvas.height / 2);
+
+
+import { loadPyodide } from "https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.mjs";
+
+const pyodide = await loadPyodide();
+
+
+await pyodide.loadPackage(["numpy"]);
+
+//------------------------------------------------------------
+// Load your python files
+//------------------------------------------------------------
+
+const files = ["python/physics.py", "python/render.py", "python/main.py"];
+
+for (const file of files) {
+    const code = await (await fetch(file)).text();
+    const filename = file.split("/").pop();  
+    pyodide.FS.writeFile(filename, code);
+}
+
+
+await pyodide.runPythonAsync(`
+import main
+`);
+
+
+//------------------------------------------------------------
+// Import python objects
+//------------------------------------------------------------
+
+const main = pyodide.pyimport("main");
+// const Sim = main.get("Sim");
+// const sim = new Sim();
+
+const render_state = main.render_state;
+
+// Import session state variables (which remain for eternity)
+let sim = main.sim;
+let bell = main.bell;
+let inputs = main.inputs;
+
+// Import the main step function (which updates the session state variables)
+const step = main.step;
+//------------------------------------------------------------
+// Canvas
+//------------------------------------------------------------
+
+
+//------------------------------------------------------------
+// Sound
+//------------------------------------------------------------
+
+const ding = new Audio("./bell_data/ding.ogg");
+
+
+
+//------------------------------------------------------------
+// Keyboard
+//------------------------------------------------------------
+
+window.addEventListener("keydown",(e)=>{
+
+    if(e.code==="ArrowLeft")
+        inputs.set("left", true);
+
+    if(e.code==="ArrowRight")
+        inputs.set("right", true);
+
+    if(e.code==="Space")
+        inputs.set("up", true);
+
+});
+
+window.addEventListener("keyup",(e)=>{
+
+    if(e.code==="ArrowLeft")
+        inputs.set("left", false);
+
+    if(e.code==="ArrowRight")
+        inputs.set("right", false);
+
+    if(e.code==="Space")
+        inputs.set("up", false);
+
+});
+
+//------------------------------------------------------------
+// Mouse
+//------------------------------------------------------------
+
+canvas.addEventListener("mousedown",()=>{
+    inputs.set("up", true);
+});
+
+canvas.addEventListener("mouseup",()=>{
+    inputs.set("up", false);
+});
+
+//------------------------------------------------------------
+// Timing
+//------------------------------------------------------------
+
+let previous = performance.now();
+
+//------------------------------------------------------------
+// Main loop
+//------------------------------------------------------------
+
+function loop(now){
+
+    const dt = (now-previous)/1000;
+    previous = now;
+
+    //--------------------------------------------------------
+    // Python physics
+    //--------------------------------------------------------
+
+    bell = step(sim, bell, inputs);
+
+    // if(bounced){
+    //     ding.cloneNode().play();
+    // }
+
+    //--------------------------------------------------------
+    // Get render state
+    //--------------------------------------------------------
+
+    // const state = render_state(Sim);
+    const x = bell.get("x");
+    const y = bell.get("y");
+    const sound = bell.get("bounce");
+
+    if (sound){
+        const new_ding = ding.cloneNode();
+        new_ding.volume = bell.get("strike_velocity")
+        new_ding.play();
+    }
+    //--------------------------------------------------------
+    // Draw
+    //--------------------------------------------------------
+
+    ctx.clearRect(0,0,400,400);
+
+    // sky
+    ctx.fillStyle="lightblue";
+    ctx.fillRect(0,0,400,400);
+
+    // ground
+    ctx.fillStyle="green";
+    ctx.fillRect(0,360,400,40);
+
+    // ball
+
+    const px = 200 + x * 80;
+    const py = 360 - y * 80;
+
+    ctx.beginPath();
+    ctx.arc(px,py,20,0,2*Math.PI);
+    ctx.fillStyle="red";
+    ctx.fill();
+
+    //--------------------------------------------------------
+
+    requestAnimationFrame(loop);
+
+}
+
+requestAnimationFrame(loop);
+
+</script>
+
+</body>
+</html>
