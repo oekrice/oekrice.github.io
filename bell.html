@@ -46,7 +46,21 @@ document.body.addEventListener("touchmove", (e) => {
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+// Stop it doing the things it wants to do on phones
 canvas.style.touchAction = "none";
+canvas.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+});
+canvas.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+}, { passive: false });
+
+canvas.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+}, { passive: false });
+canvas.style.touchAction = "none";
+canvas.addEventListener("contextmenu", e => e.preventDefault());
+
 
 function resize() {
     const size = Math.min(window.innerWidth, window.innerHeight)
