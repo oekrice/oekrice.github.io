@@ -46,11 +46,14 @@ document.body.addEventListener("touchmove", (e) => {
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+canvas.style.touchAction = "none";
+
 function resize() {
     const size = Math.min(window.innerWidth, window.innerHeight)
     canvas.width = size;
     canvas.height = size;
 }
+
 
 window.addEventListener("resize", resize);
 resize();
@@ -547,7 +550,7 @@ function loop(now){
     // Get render state
     //--------------------------------------------------------
     scaleFact = canvas.width / 384
-    scaleFact = Math.max(0.75, Math.min(scaleFact, 1.5));
+    scaleFact = Math.max(0.75, Math.min(scaleFact, 3.0));
 
     const bell_angle = bell_state.get("angle");
     const clapper_angle = bell_state.get("clapper_angle");
