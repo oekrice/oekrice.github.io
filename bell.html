@@ -1,489 +1,643 @@
-<html lang="en-us"><script src="https://pygame-web.github.io/archives/0.9/pythons.js" type=module id=site data-LINES=57 data-CONSOLE=25 data-python=python3.12 data-os=vtx,fs,snd,gui async defer>#<!--
 
-print("""
-Loading bells_ml from bells_ml.apk
-    Pygbag Version : 0.9.2
-    Template Version : 0.9.0
-    Python  : 3.12
-    CDN URL : https://pygame-web.github.io/archives/0.9/
-    Screen  : 1280x720
-    Title   : bells_ml
-    Folder  : bells_ml
-    Authors : pgw
-    SPDX-License-Identifier: cookiecutter.spdx
-
-""")
-
-
-# screen pixels (real, hardware)
-WIDTH=1024  # 1280
-HEIGHT=600  # 720
-
-# reference/idealized screen pixels
-REFX = 1980
-REFY = 1080
-
-def u(real, ref, v):
-    if abs(v)<0.9999999:
-        result = int( (float(real)/100.0) * (v*1000))
-        if v<0:
-            return real-result
-        return result
-    return int( (real/ref) * v )
-
-def ux(*argv):
-    global WIDTH, REFX
-    acc = 0
-    for v in argv:
-        acc += u(WIDTH, REFX, v)
-    return acc
-
-def uy(*argv):
-    global HEIGHT, REFY
-    acc = 0
-    for v in argv:
-        acc += u(HEIGHT, REFY, v)
-    return acc
-
-
-
-
-# do not rename
-async def custom_site():
-
-    import sys
-    import asyncio
-    import platform
-    import json
-    from pathlib import Path
-
-
-
-    import embed
-
-
-    platform.document.body.style.background = "#7f7f7f"
-
-    import pygame
-
-    def compose():
-        pygame.display.update()
-        window.chromakey(None, *screen.get_colorkey(), 40)
-
-    pygame.init()
-    pygame.font.init()
-
-    screen = pygame.display.set_mode([ux(.100),uy(.100)], pygame.SRCALPHA, 32)
-    screen.set_colorkey( (0,0,0,0), pygame.RLEACCEL )
-    screen.fill( (0,0,0,0) )
-
-    compose()
-
-    platform.window.transfer.hidden = true
-    platform.window.canvas.style.visibility = "visible"
-
-
-
-    apk = "bells_ml.apk"
-
-    bundle = "bells_ml"
-
-    # the C or js loader could do that but be explicit.
-    appdir = Path(f"/data/data/{bundle}") # /data/data/bells_ml
-    appdir.mkdir()
-
-
-    # mount apk
-
-    cfg = {
-        "io": "url",
-        "type":"mount",
-        "mount" : {
-            "point" : appdir.as_posix(),
-            "path" : "/",
-        },
-        "path" : f"/ => {appdir.as_posix()}",
-    }
-
-
-    track = platform.window.MM.prepare(apk, json.dumps(cfg))
-
-    marginx = ux(.020) # 20%
-    marginy = uy(.045) # 45%
-
-
-    def pg_bar(pos):
-        nonlocal marginx, marginy
-        # resolution of progress bar, recalculate since it may not be know yet.
-        total = track.len or 10  # avoid div0
-        slot = ux(.060)/ total # 60%
-
-        pygame.draw.rect(screen,(10,10,10),( marginx-ux(10), marginy-uy(10), (total*slot)+ux(20), uy(110) ) )
-        pygame.draw.rect(screen,(0,255,0), ( marginx, marginy, track.pos*slot, uy(90)) )
-
-    # wait until zip mount + overlayfs is complete
-    while not track.ready:
-        pg_bar(track.pos)
-        compose()
-        await asyncio.sleep(.1)
-
-    # fill it up in case it was cached and instant download
-    pg_bar(track.len)
-    compose()
-
-
-    # preloader will change dir and prepend it to sys.path
-    platform.run_main(PyConfig, loaderhome= appdir / "assets", loadermain=None)
-
-
-    # wait preloading complete
-    # that includes images and wasm compilation of bundled modules
-    while embed.counter()<0:
-        await asyncio.sleep(.1)
-
-    main = appdir / "assets" / "main.py"
-
-    # start async top level machinery and add a console.
-    await TopLevel_async_handler.start_toplevel(platform.shell, console=window.python.config.debug)
-
-    # now that apk is mounted we have access to font cache
-    # but we need to fill __file__ that is not yet set
-    __import__(__name__).__file__ = str(main)
-
-
-    # now make a prompt
-    fnt = pygame.sysfont.SysFont("freesans",  uy(80) )
-
-    def ui_callback(pkg, error=None):
-        nonlocal fnt
-        if error:
-            prompt = fnt.render(f"{error}", True, "black")
-        else:
-            prompt = fnt.render(f"Setting [{pkg}] up", True, "black")
-        pg_bar(track.len)
-        screen.blit(prompt, ( marginx+ ux(80), marginy - uy(10) ) )
-        compose()
-
-    # test/wait if user media interaction required
-    if not platform.window.MM.UME:
-
-        # now make a prompt
-        fnt = pygame.sysfont.SysFont("freesans",  uy(80) )
-        prompt = fnt.render("Ready to start !", True, "blue")
-        pg_bar(track.len)
-        screen.blit(prompt, ( marginx+ ux(80), marginy - uy(10) ) )
-        compose()
-        print("""
-        * Waiting for media user engagement : please click/touch page *
-    """)
-        while not platform.window.MM.UME:
-            await asyncio.sleep(.1)
-
-    # cleanup
-    screen.fill( (0,0,0,0) )
-    pygame.display.flip()
-
-    await shell.runpy(main, callback=ui_callback)
-
-
-
-import asyncio
-
-asyncio.run( custom_site() )
-
-
-
-
-
-
-
-
-
-
-
-
-# BEGIN BLOCK
-#
-# now this is the html part you can (and should) customize
-# It is not mandatory : pygame-script when it reads the first line (also called
-# shebang ) of above code create absolute minimal widget set
-# required for running with default rules
-#
-# do not alter that comment block it is separating python code from html code
-# =============================================================================
-# --></script><head><!--
-//=============================================================================
-//
-//
-//
-//
-//
-//
-//
-
-    {%- if cookiecutter.comment != "" -%}
-{{cookiecutter.comment}}
-    {% endif %}
-
---><script type="application/javascript">
-// END BLOCK
-
-
-
-// this dict is available under PyConfig.config from __main__
-
-config = {
-    xtermjs : "1" ,
-    _sdl2 : "canvas",
-    user_canvas : 0,
-    user_canvas_managed : 0,
-    ume_block : 1,
-    can_close : 0,
-    archive : "bells_ml",
-    gui_debug : 3,
-    cdn : "https://pygame-web.github.io/archives/0.9/",
-    autorun : 0,
-    PYBUILD : "3.12"
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Bell Simulation</title>
+
+<style>
+body{
+    margin:0;
+    background:#222;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100%;
+    overflow: hidden;
 }
 
-</script>
-
-    <title>bells_ml</title>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="height=device-height, initial-scale=1.0">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
-
-    <link rel="prefetch" href="https://pygame-web.github.io/archives/0.9/pythonrc.py">
-    <link rel="prefetch" href="https://pygame-web.github.io/archives/0.9/vt/xterm.js">
-    <link rel="prefetch" href="https://pygame-web.github.io/archives/0.9/vt/xterm-addon-image.js">
-    <link rel="prefetch" href="https://pygame-web.github.io/archives/0.9/vt/xterm-addon-image.js">
-
-
-    <link rel="icon" type="image/png" href="favicon.png" sizes="16x16">
-
-    <style>
-        #status {
-            display: inline-block;
-            vertical-align: top;
-            margin-top: 20px;
-            margin-left: 30px;
-            font-weight: bold;
-            color: rgb(120, 120, 120);
-        }
-
-        #progress {
-            height: 20px;
-            width: 300px;
-        }
-
-        div.emscripten { text-align: center; }
-        div.emscripten_border { border: 1px solid black; }
-        div.thick_border { border: 4px solid black; }
-
-        /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
-        /* average size of droid screen 470dp x 320dp  */
-        canvas.emscripten {
-            border: 0px none;
-            background-color: transparent;
-            width: 100%;
-            height: 100%;
-            z-index: 5;
-
-            padding: 0;
-            margin: 0 auto;
-
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-
-        body {
-            font-family: arial;
-            margin: 0;
-            padding: none;
-            background-color:powderblue;
-        }
-
-        .topright{
-           position:absolute;
-           top:0px;
-           right:0px;
-        }
-
-        .bottomright {
-            position:absolute;
-            top: 40%;
-            right: 0px;
-        }
-
-        .center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .trinfo{
-           position:relative;
-           right:0px;
-           border: 1px solid black;
-        }
-
-        .framed{
-           position:relative;
-           top:150px;
-           right:10px;
-           border: 1px solid black;
-        }
-    </style>
-
-    <script src="https://pygame-web.github.io/archives/0.9//browserfs.min.js"></script>
+canvas{
+    background:#ADD8E6;
+    border:1px solid black;
+    display: block;
+    width: min(100vw, 100vh);
+    height: min(100vw, 100vh); 
+}
+</style>
 
 </head>
 
 <body>
 
-    <div id="transfer" align=center>
-<!--        <div class="spinner" id='spinner'></div> -->
-        <div class="emscripten" id="status">Downloading...</div>
-        <div class="emscripten">
-            <progress value="0" max="100" id="progress"></progress>
-        </div>
-    </div>
+<canvas id="canvas" width="384" height="384"></canvas>
+
+<script type="module">
+
+//------------------------------------------------------------
+// Make a simple loading screen. It's mainly numpy that's taking a while it seems
+//------------------------------------------------------------
+
+//------------------------------------------------------------
+// Stop it scrolling om mobile devices
+//------------------------------------------------------------
+
+document.body.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+}, { passive: false });
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+    const size = Math.min(window.innerWidth, window.innerHeight)
+    canvas.width = size;
+    canvas.height = size;
+}
+
+window.addEventListener("resize", resize);
+resize();
+
+ctx.fillStyle="lightblue";
+ctx.fillRect(0,0,canvas.height,canvas.width);
+ctx.fillStyle = "black";
+ctx.font = "24px sans-serif";
+ctx.textAlign = "center";
+ctx.fillText("Loading things...", canvas.width / 2, canvas.height / 2);
 
 
-    <canvas class="emscripten" id="canvas"
-width="1px"
-height="1px"
-    oncontextmenu="event.preventDefault()" tabindex=1>
-    </canvas>
+import { loadPyodide } from "https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.mjs";
 
-    <div id=html></div>
-
-    <div id=crt  class=bottomright >
-
-        <div id="system" hidden>
-            <div class="button-container">
-                <button id="aiostop" disabled>AIO ⏏︎</button>
-                <button id="aiopaused_true" disabled>AIO ■</button>
-                <button id="aiopaused_false" disabled>AIO ▶</button>
-                <button id="pygame_mixer_music_pause" disabled>Music ■</button>
-            </div>
-
-            <div class="button-container">
-                <div id=load_min>min</div>
-                <div id=load_avg>avg</div>
-                <div id=load_max>max</div>
-              <button id="load_rst" disabled>RESET</button>
-            </div>
-
-            <div id="level">(battery level unknown)</div>
-            <div id="stateBattery">(charging state unknown)</div>
-
-        </div>
-
-        <div id=box class="emscripten_border" hidden=true>
-
-            <div id="info" class="trinfo"></div>
-
-            <iframe id="iframe" class="framed" name="iframe"
-width="470px" height="90%"
-allowtransparency="true"
-style="z-index: 10;"
-style="background: #FFFFFF;"
-frameborder="1"
-                allowfullscreen="true"
-                webkitallowfullscreen="true"
-                msallowfullscreen="true"
-                mozallowfullscreen="true"
-                sandbox="allow-same-origin allow-top-navigation allow-scripts allow-pointer-lock"
-                allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated"
-                src="https://pygame-web.github.io/archives/0.9/empty.html"
-                scrolling="yes">
-            </iframe>
-        </div>
-
-    </div>
+const pyodide = await loadPyodide();
 
 
-    <div id="dlg" hidden>
-        <input type="file" id="dlg_multifile" multiple accept="image/*">
-        <label for="dlg_multifile">Select files</label>
-    </div>
+await pyodide.loadPackage(["numpy"]);
 
-    <div id="pyconsole">
-        <div id="terminal" tabIndex=1 align="left"></div>
-    </div>
+//------------------------------------------------------------
+// Load your python files
+//------------------------------------------------------------
 
-    <script type="application/javascript">
+const scripts = ["python/nets.py", "python/bell_physics.py", "python/main.py"];
 
-    async function custom_onload(debug_hidden) {
-        // this is called before anything python is loaded
-        // make your js customization here
-        console.log(__FILE__, "custom_onload")
+for (const script of scripts) {
+    const code = await (await fetch(script)).text();
+    const filename = script.split("/").pop();  
+    pyodide.FS.writeFile(filename, code);
+}
 
-        pyconsole.hidden = debug_hidden
-        system.hidden = debug_hidden
-        transfer.hidden = debug_hidden
-        info.hidden = debug_hidden
-        box.hidden =  debug_hidden
+
+await pyodide.runPythonAsync(`
+import main
+`);
+
+//------------------------------------------------------------
+// Load in images
+//------------------------------------------------------------
+
+const wheel_img = new Image();
+wheel_img.src = "./bell_img/wheel.png";
+const clapper_img = new Image();
+clapper_img.src = "./bell_img/clapper.png";
+const bell_img = new Image();
+bell_img.src = "./bell_img/justbell.png";
+
+
+
+//------------------------------------------------------------
+// Import python objects
+//------------------------------------------------------------
+
+const main = pyodide.pyimport("main");
+// const Sim = main.get("Sim");
+// const sim = new Sim();
+
+const render_state = main.render_state;
+
+// Import session state variables (which remain for eternity)
+let sim = main.sim;
+let bell_state = main.bell_data;
+let inputs = main.inputs;
+
+// Import the main step function (which updates the session state variables)
+const step = main.step;
+//------------------------------------------------------------
+// Canvas
+//------------------------------------------------------------
+
+let scaleFact = canvas.width / 384;
+// Put in min/max limits for this factor 
+scaleFact = Math.max(0.75, Math.min(scaleFact, 1.5));
+
+//------------------------------------------------------------
+// Sound
+//------------------------------------------------------------
+
+const ding = new Audio("./bell_data/ding.ogg");
+
+
+
+//------------------------------------------------------------
+// All inputs (keyboard, mouse, touch)
+//------------------------------------------------------------
+
+window.addEventListener("keydown",(e)=>{
+    if(e.code==="Space"){
+        inputs.set("pull", 1.0);
+    }
+    if(e.code==="KeyU"){
+        inputs.set("current_mode", "up_hand");
+    }
+    if(e.code==="KeyY"){
+        inputs.set("current_mode", "up_back");
+    }
+    if(e.code==="KeyD"){
+        inputs.set("current_mode", "down");
+    }
+    if(e.code==="KeyM"){
+        inputs.set("current_mode", "manual");
+    }
+});
+
+window.addEventListener("keyup",(e)=>{
+
+    if(e.code==="Space")
+        inputs.set("pull", 0.0);
+
+});
+
+canvas.addEventListener("pointerdown",(e)=>{
+    const y = e.offsetY;
+    const imgHeight = scaleFact * wheel_img.height;
+    const imageTop = canvas.height / 2 - imgHeight / 2;
+    // Set to just be on the bell bit
+    if (
+        y >= canvas.height / 2 - imgHeight / 2 && y <= canvas.height / 2 + imgHeight / 2)
+        {inputs.set("pull", true);
+        }
+    else
+        {inputs.set("pull", false);}
+    
+});
+
+canvas.addEventListener("pointerup",()=>{
+    inputs.set("pull", false);
+});
+
+canvas.addEventListener("pointerdown",(e)=>{
+    // Check for stay break reset
+    if (bell_state.get("stay_break") > 0){
+        //Run routine to reset the bell to its original state. I think just send a command to inputs
+        inputs.set("reset", true);
+    }
+});
+
+//------------------------------------------------------------
+// Timing
+//------------------------------------------------------------
+
+let previous = performance.now();
+
+//------------------------------------------------------------
+// Interactive buttons
+//------------------------------------------------------------
+                   
+const buttons = [
+    { x: - 90, y: 40, w: 180, h: 32, label: "Ring Up (Hand)", value: false },
+    { x: - 270, y: 40 , w: 180, h: 32, label: "Ring Up (Back)", value: false },
+    { x: + 90, y: 40 , w: 180, h: 32, label: "Ring Down", value: false },
+];
+
+const massButtons = [
+    { x: - 90, y: 40, w: 180, h: 32, label: "+", value: false },
+    { x: - 270, y: 40 , w: 180, h: 32, label: "-", value: false },
+];
+
+function drawButton(button) {
+
+    let buttonWidth = 0.3*canvas.width
+    // Update button position and size based on canvas size
+    if (button.label == "Ring Up (Back)"){
+        button.x = - 1.03*buttonWidth/2; button.y = -0.675*scaleFact*wheel_img.height; button.w = buttonWidth; button.h = 32*scaleFact;
+    } else if (button.label == "Ring Up (Hand)"){
+        button.x =  - 1.03*3*buttonWidth/2; button.y = -0.675*scaleFact*wheel_img.height; button.w = buttonWidth; button.h = 32*scaleFact;
+    } else if (button.label == "Ring Down"){ 
+        button.x = 1.03*buttonWidth/2; button.y = -0.675*scaleFact*wheel_img.height; button.w = buttonWidth; button.h = 32*scaleFact;
+    } else if (button.label == "+"){
+        button.x =  0.25*scaleFact*wheel_img.height; button.y = 0.66*scaleFact*wheel_img.height; button.w = 18*scaleFact; button.h = 18*scaleFact;
+    } else if (button.label == "-"){ 
+        button.x = -0.25*scaleFact*wheel_img.height - 18*scaleFact; button.y = 0.66*scaleFact*wheel_img.height; button.w = 18*scaleFact; button.h = 18*scaleFact;
+    }
+
+    // Rounded rectangle
+    ctx.beginPath();
+    ctx.roundRect(button.x, button.y, button.w, button.h, 5);
+
+    ctx.fillStyle = button.value ? "#3ca55c" : "#666";
+    ctx.fill();
+
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+
+    ctx.fillStyle = "white";
+    ctx.font =  `${14 * scaleFact}px sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.fillText(
+        `${button.label}`,
+        button.x + button.w / 2,
+        button.y + button.h / 2
+    );
+}
+
+function drawCurrentMode() {
+
+    ctx.fillStyle = "black";
+    ctx.font =  `${16 * scaleFact}px sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    let modeTitle;
+    if (inputs.get("current_mode") == "up_hand") {
+        modeTitle = "Ringing Up at Handstroke";
+    } else if (inputs.get("current_mode") == "up_back") {
+        modeTitle = "Ringing Up at Backstroke";
+    } else if (inputs.get("current_mode") == "down") {
+        modeTitle = "Ringing Down";
+    } else {
+        modeTitle = "Press to Pull";
 
     }
 
-    function custom_prerun(){
-        // no python main and no (MEMFS + VFS) yet.
-        console.log(__FILE__, "custom_prerun")
+    ctx.fillText(
+        `${modeTitle}`,
+        0, 1.1*scaleFact*wheel_img.height/2
+    );
+}
 
+function drawCurrentForce(currentForce) {
+
+    ctx.fillStyle = "black";
+    ctx.font =  `${16 * scaleFact}px sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    let forceTitle;
+    let forcePc = Math.round(100 * Math.abs(currentForce) / 600.0);
+
+    forceTitle = `Force on Wheel: ${String(forcePc).padStart(3, " ")}%`;
+    ctx.fillText(
+        `${forceTitle}`,
+        0, 1.25*scaleFact*wheel_img.height/2
+    );
+}
+
+function drawStroke() {
+
+    ctx.fillStyle = "black";
+    ctx.font =  `${16 * scaleFact}px sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    let stateTitle = ""
+    if (bell_state.get("angle") > Math.PI*0.5){
+        stateTitle = "Handstroke"
+    } else if (bell_state.get("angle") < -Math.PI*0.5){
+        stateTitle = "Backstroke"
+    } 
+    ctx.fillText(
+        `${stateTitle}`,
+        scaleFact*wheel_img.height/2, -0.9*scaleFact*wheel_img.height/2
+    );
+}
+
+function drawScore() {
+
+    ctx.fillStyle = "black";
+    ctx.font =  `${16 * scaleFact}px sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    let stateTitle = ""
+    let handScore = bell_state.get("hand_score")
+    let backScore = bell_state.get("back_score")
+
+    if (bell_state.get("hand_score") > 0 || bell_state.get("back_score") > 0){
+        stateTitle = `Score: ${handScore}H, ${backScore}B `
     }
+    ctx.fillText(
+        `${stateTitle}`,
+        -scaleFact*wheel_img.height/2, -0.9*scaleFact*wheel_img.height/2
+    );
+}
 
-    function custom_postrun(){
-        // python main and no VFS filesystem yet.
-        console.log(__FILE__, "custom_postrun")
+function drawBellMass() {
 
-        // prevent ff horizontal scroll
-        window.addEventListener("keydown", function(e) {
-            if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
-                if (!python.config.debug)
-                    e.preventDefault();
-            }
-        }, false);
+    ctx.fillStyle = "black";
+    ctx.font =  `${16 * scaleFact}px sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
-    }
+    let massTitle = `Bell Mass: ${String(bell_state.get("bell_mass"))}`;
+    ctx.fillText(
+        `${massTitle}`,
+        0, 1.4*scaleFact*wheel_img.height/2
+    );
+}
 
-    function debug() {
-        // allow to gain access to dev tools from js console
-        // but only on desktop. difficult to reach when in iframe
-        python.config.debug = true
-        custom_onload(false)
-        Module.PyRun_SimpleString("shell.uptime()")
-        window_resize()
-    }
+function drawStayBreak() {
 
-    function info_inline(data){
-        document.getElementById("info").innerHTML = data
-    }
+    if (bell_state.get("stay_break") > 0){
+    //if (true) {
+        const lines = [
+            "You've broken the stay.",
+            "How careless.",
+            "Click to Reset."
+        ];
 
-    function info_online(url) {
-        // display info about current APK
-        fetch( url /*, options */)
-            .then((response) => response.text())
-            .then((html) => {
-                info_inline(html);
-        })
-        .catch((error) => {
-            console.warn(error);
+        const fontSize = 18 * scaleFact;
+        const lineHeight = fontSize * 1.3;
+
+        ctx.font = `${fontSize}px sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        const boxWidth = 2000 * scaleFact;
+        const boxHeight = lines.length * lineHeight + 30 * scaleFact;
+
+        const x = 0;
+        const y = 0;
+
+        // grey background
+        ctx.fillStyle = "rgba(120, 120, 120, 0.9)";
+        ctx.fillRect(
+            x - boxWidth / 2,
+            y - boxHeight / 2,
+            boxWidth,
+            boxHeight
+        );
+
+        // red text
+        ctx.fillStyle = "red";
+
+        lines.forEach((line, i) => {
+            ctx.fillText(
+                line,
+                x,
+                y + (i - (lines.length - 1) / 2) * lineHeight
+            );
         });
     }
+    }
+    
+function drawRope(){
+    // Function for drawing the rope and 'box' that it passes through
+    // Should be easy enough, but requires a little bit of physics 
 
-    function frame_online(url) {
-        window.frames["iframe"].location = url;
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1.0;
+
+    let box_x = -0.465*scaleFact*bell_img.width
+    let box_y = 0.925*scaleFact*bell_img.width/2
+    let boxWidth = 15*scaleFact
+    let ropeWidth = 6.0*scaleFact
+
+    let hole_angle = bell_state.get("angle") - 3*Math.PI/4 
+
+    if (hole_angle <= -Math.PI / 2){
+        // Fully handstroke -- draw straight up
+        ctx.fillStyle = "rgb(207, 176, 2)";
+        ctx.fillRect(box_x - ropeWidth/2, 0.0, ropeWidth, 2000);
+        ctx.strokeRect(box_x - ropeWidth/2, 0.0, ropeWidth, 2000);
+    } else if (hole_angle  >= 0.0){
+        //   Fully backstroke -- draw straight across
+        ctx.fillStyle = "rgb(207, 176, 2)";
+        ctx.fillRect(box_x - ropeWidth/2, box_y - ropeWidth/2, -box_x + ropeWidth/2, ropeWidth);
+        ctx.strokeRect(box_x - ropeWidth/2, box_y - ropeWidth/2, -box_x + ropeWidth/2, ropeWidth);
+    } else {
+    ctx.save()
+    ctx.translate(box_x, box_y);
+    let x_prop = 1 - Math.cos(hole_angle + Math.PI/2)
+    let y_prop = 1 - Math.sin(hole_angle + Math.PI/2)
+    ctx.rotate(-Math.atan(y_prop/x_prop))
+    ctx.fillStyle = "rgb(207, 176, 2)";
+    ctx.fillRect( 0.0, -ropeWidth/2, -box_x, ropeWidth);
+    ctx.strokeRect( 0.0, -ropeWidth/2, -box_x, ropeWidth);
+    ctx.restore()
     }
 
-    </script>
+    ctx.fillStyle = "rgb(207, 176, 2)";
+    ctx.fillRect(box_x - ropeWidth/2, box_y, ropeWidth, 2000);
+    ctx.strokeRect(box_x - ropeWidth/2, box_y, ropeWidth, 2000);
+
+    ctx.fillStyle = "brown";
+
+    ctx.fillRect(box_x - boxWidth/2, box_y - boxWidth/2, boxWidth, boxWidth);
+    ctx.strokeRect(box_x - boxWidth/2, box_y - boxWidth/2, boxWidth, boxWidth);
+
+}
+
+canvas.addEventListener("pointerdown", e => {
+    const x = e.offsetX;
+    const y = e.offsetY;
+    let worldX = x - canvas.width/2;
+    let worldY = y - canvas.height/2;
+
+    for (const button of buttons) {
+
+        if (
+            worldX >= button.x &&
+            worldX <= button.x + button.w &&
+            worldY >= button.y &&
+            worldY <= button.y + button.h
+        ) {
+            // This is what happens when the button is toggled. Changes the neural network input
+            if (button.label == "Ring Up (Hand)" && !button.value){
+                inputs.set("current_mode", "up_hand");
+                button.value = true;
+                for (const otherbutton of buttons) {
+                    if (otherbutton !== button) {
+                        otherbutton.value = false;
+                    }
+                }
+            } else if (button.label == "Ring Up (Back)" && !button.value){
+                inputs.set("current_mode", "up_back");
+                button.value = true;
+                for (const otherbutton of buttons) {
+                    if (otherbutton !== button) {
+                        otherbutton.value = false;
+                    }
+                }
+            } else if (button.label == "Ring Down" && !button.value){ 
+                inputs.set("current_mode", "down");
+                button.value = true;
+                for (const otherbutton of buttons) {
+                    if (otherbutton !== button) {
+                        otherbutton.value = false;
+                    }
+                }
+            } else if (button.value){
+                inputs.set("current_mode", "manual");
+                button.value = false;}
+            }
+        }
+    for (const button of massButtons) {
+
+        if (
+            worldX >= button.x &&
+            worldX <= button.x + button.w &&
+            worldY >= button.y &&
+            worldY <= button.y + button.h
+        ) {
+            // This is what happens when the button is toggled. Changes the neural network input
+            if (button.label == "+"){
+                inputs.set("masschange", 1);
+                button.value = true
+            } else if (button.label == "-"){
+                inputs.set("masschange", -1);
+                button.value = true
+            }
+        }
+    }
+    return;
+
+}
+)
+
+canvas.addEventListener("pointerup", e => {
+    const x = e.offsetX;
+    const y = e.offsetY;
+    let worldX = x - canvas.width/2;
+    let worldY = y - canvas.height/2;
+
+    for (const button of massButtons) {
+
+        if (
+            worldX >= button.x &&
+            worldX <= button.x + button.w &&
+            worldY >= button.y &&
+            worldY <= button.y + button.h
+        ) {
+            button.value = false
+        }
+    }
+    return;
+
+}
+)
+
+
+//------------------------------------------------------------
+// Main loop
+//------------------------------------------------------------
+let angle = 0;
+let FPS = 1/60;
+let lastForceUpdate = 0
+let currentForce = 0.0;
+
+function loop(now){
+
+    //--------------------------------------------------------
+    // Python physics
+    //--------------------------------------------------------
+    bell_state = step(inputs);
+
+    // if(bounced){
+    //     ding.cloneNode().play();
+    // }
+
+    //--------------------------------------------------------
+    // Get render state
+    //--------------------------------------------------------
+    scaleFact = canvas.width / 384
+    scaleFact = Math.max(0.75, Math.min(scaleFact, 1.5));
+
+    const bell_angle = bell_state.get("angle");
+    const clapper_angle = bell_state.get("clapper_angle");
+
+    // const state = render_state(Sim);
+    // const x = bell.get("x");
+    // const y = bell.get("y");
+    const sound = bell_state.get("ding");
+
+    if (sound){
+        const new_ding = ding.cloneNode();
+        new_ding.volume = bell_state.get("strike_velocity")
+        new_ding.play();
+    }
+    //--------------------------------------------------------
+    // Draw
+    //--------------------------------------------------------
+    ctx.textAlign = "center";
+
+    // sky
+    ctx.fillStyle="lightblue";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // Context for the bell to be drawn. 
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const x_translation = canvas.width / 2;
+    const y_translation = canvas.height/ 2;
+
+    ctx.save();
+
+    ctx.translate(x_translation, y_translation);
+
+    const x = - scaleFact * wheel_img.width / 2;
+    const y = - scaleFact * wheel_img.height / 2;
+
+    drawRope()
+
+    ctx.rotate(-bell_angle);
+
+    ctx.drawImage(wheel_img, -scaleFact * wheel_img.width / 2, -scaleFact * wheel_img.height / 2, scaleFact * wheel_img.width, scaleFact * wheel_img.height);
+
+    ctx.rotate(-clapper_angle + bell_angle);
+
+    ctx.drawImage(clapper_img, -scaleFact *clapper_img.width / 2, -scaleFact * clapper_img.height / 2, scaleFact * clapper_img.width, scaleFact * clapper_img.height);
+
+    ctx.rotate(-bell_angle + clapper_angle);
+
+    ctx.drawImage(bell_img, -scaleFact * bell_img.width / 2, -scaleFact * bell_img.height / 2, scaleFact * bell_img.width, scaleFact * bell_img.height);
+
+    ctx.rotate(bell_angle);
+
+
+    for (const button of buttons) {
+        drawButton(button);
+    }
+
+    for (const button of massButtons) {
+        drawButton(button);
+    }
+
+
+    drawCurrentMode();
+    drawStroke();
+    drawScore();
+
+    // The current force is updated every 50ms, to avoid too much flickering in the display.
+    if (now - lastForceUpdate > 50){
+        lastForceUpdate = now;
+        currentForce = bell_state.get("wheel_force");
+    }
+    drawCurrentForce(currentForce);
+
+    drawBellMass();
+
+    drawStayBreak();
+
+    
+
+    ctx.restore();
+
+    //--------------------------------------------------------
+
+    requestAnimationFrame(loop);
+
+}
+
+requestAnimationFrame(loop);
+
+</script>
 
 </body>
 </html>
