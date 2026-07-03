@@ -148,8 +148,6 @@ scaleFact = Math.max(0.75, Math.min(scaleFact, 1.5));
 
 const ding = new Audio("./bell_data/ding.ogg");
 
-
-
 //------------------------------------------------------------
 // All inputs (keyboard, mouse, touch)
 //------------------------------------------------------------
@@ -266,7 +264,11 @@ function drawButton(button) {
 
 function drawCurrentMode() {
 
-    ctx.fillStyle = "black";
+    if (hasInteracted){
+        ctx.fillStyle = "black";
+    } else {
+        ctx.fillStyle = "red";
+    }
     ctx.font =  `${16 * scaleFact}px sans-serif`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -279,8 +281,11 @@ function drawCurrentMode() {
     } else if (inputs.get("current_mode") == "down") {
         modeTitle = "Ringing Down";
     } else {
-        modeTitle = "Press to Pull";
-
+        if (hasInteracted){
+            modeTitle = "Press Bell/Space to Pull";
+        } else {
+            modeTitle = "PRESS BELL/SPACE TO PULL";
+        }
     }
 
     ctx.fillText(
@@ -498,10 +503,10 @@ canvas.addEventListener("pointerdown", e => {
     for (const button of massButtons) {
 
         if (
-            worldX >= button.x &&
-            worldX <= button.x + button.w &&
-            worldY >= button.y &&
-            worldY <= button.y + button.h
+            worldX >= button.x -20 &&
+            worldX <= button.x + button.w + 20 &&
+            worldY >= button.y -20 &&
+            worldY <= button.y + button.h + 20
         ) {
             // This is what happens when the button is toggled. Changes the neural network input
             if (button.label == "+"){
@@ -527,10 +532,10 @@ canvas.addEventListener("pointerup", e => {
     for (const button of massButtons) {
 
         if (
-            worldX >= button.x &&
-            worldX <= button.x + button.w &&
-            worldY >= button.y &&
-            worldY <= button.y + button.h
+            worldX >= button.x -20 &&
+            worldX <= button.x + button.w  + 20 &&
+            worldY >= button.y  -20 &&
+            worldY <= button.y + button.h + 20
         ) {
             button.value = false
         }
@@ -545,39 +550,38 @@ canvas.addEventListener("pointerup", e => {
 // Main loop
 //------------------------------------------------------------
 let angle = 0;
-let FPS = 1/60;
+let target_dt = 1/60;  // This is the target rate for the screen refresh (how often a physics timestep will happen, essentially)
 let lastForceUpdate = 0
 let currentForce = 0.0;
 
+let realTime = performance.now()/1000  // How much time has passed in reality
+let simTime = performance.now()/1000  //How much time has passed in the simulation (set to be equal to start with)
+let prevTime = 0.0  //This is the time of the previous frame. Need to log it in case the tab is switched or equivalent
+let prevAngle = 0.0  //Angle at the previous timestep
+let prevClapperAngle = 0.0  //Clapper angle at the previous timestep
+let interpFactor = 0.0  //Interpolation factor between the two timesteps
+let isRing = false //Need an extra variable now as more than one fram can happen per timestep
+let hasInteracted = false
+
 function loop(now){
 
-    //--------------------------------------------------------
-    // Python physics
-    //--------------------------------------------------------
-    bell_state = step(inputs);
-
-    // if(bounced){
-    //     ding.cloneNode().play();
-    // }
-
+    prevTime = realTime
     //--------------------------------------------------------
     // Get render state
     //--------------------------------------------------------
     scaleFact = canvas.width / 384
     scaleFact = Math.max(0.75, Math.min(scaleFact, 3.0));
 
-    const bell_angle = bell_state.get("angle");
-    const clapper_angle = bell_state.get("clapper_angle");
+    const bell_angle = interpFactor*bell_state.get("angle") + (1.0 - interpFactor)*prevAngle;
+    const clapper_angle = interpFactor*bell_state.get("clapper_angle") + (1.0 - interpFactor)*prevClapperAngle;
 
-    // const state = render_state(Sim);
-    // const x = bell.get("x");
-    // const y = bell.get("y");
-    const sound = bell_state.get("ding");
+    const sound = isRing; //bell_state.get("ding");
 
     if (sound){
         const new_ding = ding.cloneNode();
         new_ding.volume = bell_state.get("strike_velocity")
         new_ding.play();
+        isRing = false
     }
     //--------------------------------------------------------
     // Draw
@@ -626,7 +630,6 @@ function loop(now){
         drawButton(button);
     }
 
-
     drawCurrentMode();
     drawStroke();
     drawScore();
@@ -642,11 +645,42 @@ function loop(now){
 
     drawStayBreak();
 
-    
-
     ctx.restore();
 
     //--------------------------------------------------------
+    // Python physics (do after rendering, so the first frame is just stationary)
+    //--------------------------------------------------------
+
+    prevTime = realTime
+    realTime = performance.now()/1000
+
+    if (realTime - prevTime > 0.2){
+        //Reset timing, as there's been some significant lag (tab switch or equivalent)
+        simTime = realTime
+    }
+
+    while (performance.now()/1000 > simTime){
+        // Save previous state to allow for interpolation
+        // This should always be between the correct ones, I hope
+        prevAngle = bell_state.get("angle")
+        prevClapperAngle = bell_state.get("clapper_angle")
+        bell_state = step(inputs);
+        simTime = simTime + target_dt
+
+        if (bell_state.get("ding")){
+            isRing = true
+        }
+    }
+
+    // Determine angle interpolants
+    interpFactor = (performance.now()/1000 - (simTime - target_dt))/target_dt
+    //--------------------------------------------------------
+
+    if (inputs.get("current_mode") != "manual" || inputs.get("pull")){
+        hasInteracted = true
+    }
+
+    console.log(hasInteracted)
 
     requestAnimationFrame(loop);
 
